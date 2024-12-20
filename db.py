@@ -39,6 +39,8 @@ def log_block(addr, req, block_type, src_time):
         info = req.headers['cookie']
     elif block_type == "post-data":
         info = req.body
+    elif block_type == "ml_detect":
+        info = req.uri + "  |  " + ''.join(req.body)
     try:
         print("Attack detected! :   " + src_time + "   " + addr[0] + "   " + str(addr[1]) + "   " + block_type + "   "
               + req.method + "   " + req.uri + "   " + str(info))

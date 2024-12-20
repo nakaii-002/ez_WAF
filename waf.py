@@ -3,7 +3,8 @@ from datetime import datetime
 from threading import Thread
 from config.conf import *
 from parse import Request
-from re_detect.detect import Detect
+from re_detect.detect import ReDetect
+from ml_detect.detect import MlDetect
 from db import log_block
 
 
@@ -23,8 +24,13 @@ def para_filter(r, addr):
         return {"status": True, "type": 'in-black-uri'}
 
     # 规则匹配
-    det_data = Detect(r)
+    det_data = ReDetect(r)
     result = det_data.run()
+
+    # 随机森林预测
+    if not result["status"]:
+        ml_test = MlDetect(r)
+        result = ml_test.run()
 
     return result
 

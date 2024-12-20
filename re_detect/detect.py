@@ -2,7 +2,7 @@ import re
 from re_detect import acl
 
 
-class Detect:
+class ReDetect:
     """
     检测web攻击行为
     user-agent, cookies, uri, body
