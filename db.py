@@ -6,7 +6,7 @@ from sqlalchemy.orm import sessionmaker
 
 
 BaseModel = declarative_base()
-DB_CONNECT_STRING = 'mysql+mysqldb://root@localhost:13306/waf?charset=utf8'
+DB_CONNECT_STRING = 'mysql+mysqldb://root@localhost:3306/waf?charset=utf8'
 engine = create_engine(DB_CONNECT_STRING, echo=False)
 DB_Session = sessionmaker(bind=engine)
 

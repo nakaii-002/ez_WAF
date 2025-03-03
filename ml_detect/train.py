@@ -7,6 +7,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 from joblib import dump, load
 
+# sklearn==1.6.1 joblib==1.4.2
+
 # 读取数据
 data = pd.read_csv('csic_database_cleaned.csv')
 data = data.fillna("")

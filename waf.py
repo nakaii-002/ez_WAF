@@ -1,4 +1,5 @@
 import socket
+import signal
 from datetime import datetime
 from threading import Thread
 from config.conf import *
@@ -7,6 +8,14 @@ from re_detect.detect import ReDetect
 from ml_detect.detect import MlDetect
 from db import log_block
 
+# 添加全局变量控制程序运行
+running = True
+
+def signal_handler(signum, frame):
+    """处理退出信号"""
+    global running
+    print("\n正在关闭服务器...")
+    running = False
 
 def para_filter(r, addr):
     """检测web攻击，返回检测结果
@@ -107,17 +116,34 @@ def connecting(conn, addr):
 
 
 def run():
+    # 注册信号处理器
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
+    
     s = socket.socket()
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind(('0.0.0.0', 8000))
     s.listen(5)
+    
+    # 设置socket超时，以便定期检查running状态
+    s.settimeout(1.0)
+    
     try:
-        while 1:
-            conn, addr = s.accept()
-            t = Thread(target=connecting, args=(conn, addr))
-            t.start()
+        global running
+        while running:
+            try:
+                conn, addr = s.accept()
+                t = Thread(target=connecting, args=(conn, addr))
+                t.start()
+            except socket.timeout:
+                continue
+            except Exception as e:
+                print(f"发生错误: {e}")
+                break
     finally:
+        print("正在关闭所有连接...")
         s.close()
+        print("服务器已关闭。")
 
 
 if __name__ == '__main__':
