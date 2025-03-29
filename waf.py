@@ -123,7 +123,7 @@ def run():
     s = socket.socket()
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind(('0.0.0.0', 8000))
-    s.listen(5)
+    s.listen(20)
     
     # 设置socket超时，以便定期检查running状态
     s.settimeout(1.0)
